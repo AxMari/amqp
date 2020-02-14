@@ -20,14 +20,15 @@ def main():
             sys.exit(1)
 
     print('Connecting to AMQP broker..')
-    connection = pika.BlockingConnection(
+    parameters = pika.ConnectionParameters(
         pika.ConnectionParameters(os.environ['AMQP_HOST']),
         int(os.environ['AMQP_PORT']),
         os.environ['AMQP_VHOST'],
-        pika.credentials.PlainCredentials(
+        pika.PlainCredentials(
             os.environ['AMQP_USERNAME'], os.environ['AMQP_PASSWORD']
         )
     )
+    connection = pika.BlockingConnection(parameters)
 
     print('Opening channel..')
     channel = connection.channel()
