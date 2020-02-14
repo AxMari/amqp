@@ -24,14 +24,6 @@ def main():
             sys.exit(1)
 
     print('Connecting to AMQP broker..')
-    parameters = pika.ConnectionParameters(
-        os.environ['AMQP_HOST'],
-        int(os.environ['AMQP_PORT']),
-        os.environ['AMQP_VHOST'],
-        pika.PlainCredentials(
-            os.environ['AMQP_USERNAME'], os.environ['AMQP_PASSWORD']
-        )
-    )
 
     connection = connect()
     print('Successfully connected!')
@@ -69,6 +61,15 @@ def main():
 
 
 def connect():
+    parameters = pika.ConnectionParameters(
+        os.environ['AMQP_HOST'],
+        int(os.environ['AMQP_PORT']),
+        os.environ['AMQP_VHOST'],
+        pika.PlainCredentials(
+            os.environ['AMQP_USERNAME'], os.environ['AMQP_PASSWORD']
+        )
+    )
+
     for i in range(MAX_RETRIES):
         if i != 0:
             time.sleep(5)
