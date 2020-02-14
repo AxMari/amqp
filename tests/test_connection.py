@@ -8,7 +8,8 @@ import sys
 import secrets
 
 REQUIRED_ENV_VARS = [
-    'AMQP_HOST'
+    'AMQP_HOST', 'AMQP_PORT', 'AMQP_USERNAME',
+    'AMQP_PASSWORD', 'AMQP_VHOST'
 ]
 
 
@@ -17,8 +18,17 @@ def main():
         if not os.environ.get(evar):
             print(f'Missing required env var {evar}')
             sys.exit(1)
+
     print('Connecting to AMQP broker..')
-    connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ['AMQP_HOST']))
+    connection = pika.BlockingConnection(
+        host=pika.ConnectionParameters(os.environ['AMQP_HOST']),
+        port=int(os.environ['AMQP_PORT']),
+        virtual_host=os.environ['AMQP_VHOST'],
+        credentials=pika.credentials.PlainCredentials(
+            os.environ['AMQP_USERNAME'], os.environ['AMQP_PASSWORD']
+        )
+    )
+
     print('Opening channel..')
     channel = connection.channel()
     print('Declaring queue..')

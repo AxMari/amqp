@@ -12,7 +12,7 @@ jobs:
       rabbitmq:
         image: rabbitmq
         ports:
-          - 5672:5672
+          - 5672/tcp
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python ${{ matrix.python_version }}
@@ -31,5 +31,9 @@ jobs:
       working-directory: ./tests
       env:
         AMQP_HOST: localhost
+        AMQP_PORT: ${{ job.services.rabbitmq.ports[5672] }}
+        AMQP_USERNAME: guest
+        AMQP_PASSWORD: guest
+        AMQP_VHOST: "/"
       run: |
         python test_connection.py
