@@ -6,12 +6,15 @@ import pika
 import os
 import sys
 import secrets
+import time
 
 REQUIRED_ENV_VARS = [
     'AMQP_HOST', 'AMQP_PORT', 'AMQP_USERNAME',
     'AMQP_PASSWORD', 'AMQP_VHOST'
 ]
 
+MAX_RETRIES = 5
+RETRY_SPACING = 5
 
 def main():
     for evar in REQUIRED_ENV_VARS:
@@ -28,7 +31,20 @@ def main():
             os.environ['AMQP_USERNAME'], os.environ['AMQP_PASSWORD']
         )
     )
-    connection = pika.BlockingConnection(parameters)
+
+    connection = None
+    for i in range(MAX_RETRIES):
+        if i != 0:
+            time.sleep(5)
+        try:
+            connection = pika.BlockingConnection(parameters)
+            break
+        except pika.exceptions.IncompatibleProtocolError:
+            print(f'Error while connecting to AMQP (retry {i})'
+
+    if connection is None:
+        print('Exhausted retry attempts')
+        sys.exit(1)
 
     print('Opening channel..')
     channel = connection.channel()
