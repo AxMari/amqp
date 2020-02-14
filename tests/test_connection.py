@@ -16,6 +16,7 @@ REQUIRED_ENV_VARS = [
 MAX_RETRIES = 5
 RETRY_SPACING = 5
 
+
 def main():
     for evar in REQUIRED_ENV_VARS:
         if not os.environ.get(evar):
