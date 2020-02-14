@@ -41,7 +41,7 @@ def main():
             connection = pika.BlockingConnection(parameters)
             break
         except pika.exceptions.IncompatibleProtocolError:
-            print(f'Error while connecting to AMQP (retry {i})'
+            print(f'Error while connecting to AMQP (retry {i})')
 
     if connection is None:
         print('Exhausted retry attempts')
