@@ -48,7 +48,7 @@ def main():
     con_body = None
     for method_frame, properties, body in channel.consume('hello'):
         channel.basic_ack(method_frame.delivery_tag)
-        con_body = body
+        con_body = body.decode('utf-8')
         break
     print('Cancelling channel..')
     channel.close()
