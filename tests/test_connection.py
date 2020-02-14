@@ -8,8 +8,7 @@ import sys
 import secrets
 
 REQUIRED_ENV_VARS = [
-    'AMQP_HOST', 'AMQP_PORT', 'AMQP_VHOST',
-    'AMQP_USERID', 'AMQP_PASSWD'
+    'AMQP_HOST'
 ]
 
 

@@ -30,7 +30,6 @@ jobs:
     - name: Run connection tests
       working-directory: ./tests
       env:
-        RABBITMQ_HOST: localhost
-        RABBITMQ_PORT: 5672
+        AMQP_HOST: localhost
       run: |
         python test_connection.py
