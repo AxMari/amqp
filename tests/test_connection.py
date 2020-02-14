@@ -33,19 +33,8 @@ def main():
         )
     )
 
-    connection = None
-    for i in range(MAX_RETRIES):
-        if i != 0:
-            time.sleep(5)
-        try:
-            connection = pika.BlockingConnection(parameters)
-            break
-        except pika.exceptions.IncompatibleProtocolError:
-            print(f'Error while connecting to AMQP (retry {i})')
-
-    if connection is None:
-        print('Exhausted retry attempts')
-        sys.exit(1)
+    connection = connect()
+    print('Successfully connected!')
 
     print('Opening channel..')
     channel = connection.channel()
@@ -60,7 +49,7 @@ def main():
     channel = None
 
     print('Reconnecting..')
-    connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ['AMQP_HOST']))
+    connection = connect()
     print('Opening channel..')
     channel = connection.channel()
     print('Performing basic get..')
@@ -78,6 +67,18 @@ def main():
         print(f'Consumed {con_body} but sent {pub_body} (they do not match!)')
         sys.exit(1)
 
+
+def connect():
+    for i in range(MAX_RETRIES):
+        if i != 0:
+            time.sleep(5)
+        try:
+            return pika.BlockingConnection(parameters)
+        except pika.exceptions.IncompatibleProtocolError:
+            print(f'Error while connecting to AMQP (retry {i})')
+
+    print('Exhausted retry attempts')
+    sys.exit(1)
 
 if __name__ == '__main__':
     main()
