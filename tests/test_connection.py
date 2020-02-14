@@ -28,7 +28,7 @@ def main():
             os.environ['AMQP_USERNAME'], os.environ['AMQP_PASSWORD']
         )
     )
-    connection = pika.BlockingConnection(parameters)
+    connection = pika.BlockingConnection([parameters])
 
     print('Opening channel..')
     channel = connection.channel()
