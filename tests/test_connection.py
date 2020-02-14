@@ -2,7 +2,6 @@
 creates a test queue, adds a message to it, then pulls it off and
 disconnects.
 """
-import json
 import pika
 import os
 import sys
